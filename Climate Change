@@ -4,7 +4,7 @@ SELECT *
 FROM state_climate;
 */
 — create a running temperate average, by state, ordered by year
-/*
+
 SELECT state, year, tempc, AVG(tempc) OVER (
   PARTITION BY state 
   ORDER BY year) as 'running_avg_temp', tempc - (AVG(tempc) OVER (
@@ -12,37 +12,36 @@ SELECT state, year, tempc, AVG(tempc) OVER (
     ORDER BY year
   )) as 'real_avg_difference'
 FROM state_climate;
-*/
+
 — these algorithms select the highest and lowest historical temperatures for each state
-/*
+
 SELECT  DISTINCT state, year,  MIN(tempc)  as 'lowest_temp'
   FROM state_climate
  GROUP BY state;
-*/  
-/*
+
   SELECT state, year, MAX(tempc) as 'highest_temp'
   FROM state_climate
   GROUP BY state;
-*/
+
 - this algorithm examines temperature change from one year to the next
-/*
+
 SELECT state, year, tempc, tempc - LAG(tempc, 1, tempc) OVER ( PARTITION BY state ORDER BY year) AS 'temp_change'
 FROM state_climate;
-*/
+
 - This algorithms rank the coldest years on record, by state
-/*
+
 SELECT year, state, RANK() OVER (PARTITION BY state ORDER BY tempc ASC) AS 'coldest_rank', ROUND(tempc, 3)
 FROM  state_climate;
-*/
-/*
+
 SELECT year, state, RANK() OVER (PARTITION BY state ORDER BY tempc DESC) as 'warmest_rank', ROUND(tempc, 3)
 FROM state_climate;
-*/
+
 - this algorithm separates each state’s data into quartiles, and orders them by temperature
-/*
+
 SELECT NTILE(4) OVER (PARTITION BY state ORDER BY tempc ASC) as 'quartile', year, state, tempc
 FROM state_climate;
-*/
-— This algorithm separates the entire historical dataset into quintiles, and orders the national data by temperature 
+
+— This algorithm separates the entire historical dataset into quintiles, and orders the national data by temperature
+
 SELECT NTILE(5) OVER (ORDER BY tempc ASC), year, state, tempc
 FROM state_climate;

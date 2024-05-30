@@ -1,6 +1,6 @@
 
 -- begin by looking at each campaign and the page visits each has generated
-/*
+
 SELECT COUNT(DISTINCT utm_campaign)
 FROM page_visits;
 SELECT DISTINCT utm_campaign, utm_source
@@ -11,14 +11,14 @@ SELECT COUNT(DISTINCT utm_source)
 FROM page_visits;
 SELECT DISTINCT utm_source
 FROM page_visits;
-*/
 
-/*
+
+
 SELECT DISTINCT page_name
 FROM page_visits;
-*/
+
 -- This algorithm examines the number of people brought to the website from each campaign
-/*
+
 WITH first_touch AS (SELECT DISTINCT user_id, MIN(timestamp) AS first_touch_on
 FROM page_visits
 GROUP BY user_id)
@@ -28,9 +28,9 @@ FROM first_touch as f
 JOIN page_visits as p ON f.user_id = p.user_id AND f.first_touch_on = p.timestamp
 GROUP BY utm_campaign;
 
-*/
+
 -- this algorithm examines the steps of the purchase process and looks at where customers leave the process
-/*
+
 WITH last_touch AS (
   SELECT DISTINCT user_id, MAX(timestamp) AS last_touch_on
   FROM page_visits
@@ -41,14 +41,14 @@ SELECT DISTINCT utm_campaign, COUNT(last_touch_on) AS 'last_touches'
 FROM last_touch l
 JOIN page_visits p on l.user_id = p.user_id AND l.last_touch_on = p.timestamp
 GROUP BY utm_campaign;
-*/
+
 
 —how many customers actually purchase something
-/*
+
 SELECT  COUNT(DISTINCT user_id)
 FROM page_visits
 WHERE page_name IS '4 - purchase';
-*/
+
 
 --how many customers actually purchase something, according to marketing campaign
 

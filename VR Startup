@@ -3,29 +3,24 @@ Looking at the numbers, each project requires at least 6 roles
 Begin by getting a feel for the data
 */
 
---SELECT * FROM employees
---LIMIT 10;
+--SELECT * FROM employees;
 
---SELECT * FROM projects
---LIMIT 10;
+--SELECT * FROM projects;
 
 --to understand which employees/projects are available
-/*
+
 SELECT  employees.first_name, employees.last_name, projects.project_name
 FROM employees
 LEFT JOIN projects ON projects.project_id = employees.current_project
 WHERE employees.current_project IS NULL;
-*/
 
-/*
 SELECT projects.project_name
 FROM projects
 LEFT JOIN employees   ON projects.project_id = employees.current_project
 WHERE employees.current_project IS NULL;
-*/
 
 --to see how many employees have selected each project
-/*
+
 SELECT projects.project_name, COUNT(employees.current_project) AS 'Employees'
 FROM projects
 LEFT JOIN employees ON projects.project_id = employees.current_project
@@ -37,10 +32,9 @@ FROM projects
 LEFT JOIN employees ON projects.project_id = employees.current_project
 GROUP BY employees.current_project
 HAVING COUNT(employees.current_project) > 1 ORDER BY COUNT(employees.current_project) DESC;
-*/
 
 -- How many employees do we have at each position, and can we fulfill the needs of our startup with current staff?
-/*
+
 SELECT * FROM employees
 WHERE position = 'Developer'
 AND current_project IS NULL;
@@ -48,8 +42,7 @@ AND current_project IS NULL;
 SELECT COUNT(*) 
 FROM employees
 WHERE position = 'Developer' AND current_project IS NULL;
-*/
-/*
+
 WITH 'Assignments' AS (SELECT projects.project_name AS 'Project', employees.first_name AS 'First Name', employees.first_name AS 'Last Name',  employees.position AS 'Developer', employees.current_project AS 'Chosen_Project'
 FROM projects
 LEFT JOIN employees ON projects.project_id = employees.current_project
@@ -58,43 +51,36 @@ ORDER BY current_project ASC
 SELECT Project, COUNT(Chosen_Project) AS 'Developers Currently', 2 - COUNT(Chosen_Project) AS 'Still Needed'
 FROM Assignments
 GROUP BY Project;
-*/
-
 
 -- looking at personality type, we want to understand workplace compatibility
-/*
+
 SELECT personality, COUNT(personality)
 FROM employees
 GROUP By personality
 ORDER BY COUNT(personality) DESC;
-*/
 
-/*
 SELECT projects.project_name AS 'Project', COUNT(current_project) AS 'ENJFs'
 FROM employees
 INNER JOIN projects ON employees.current_project = projects.project_id
 WHERE personality = "ENFJ"
 GROUP BY current_project
 ORDER BY COUNT(current_project) DESC;
-*/
 
 -- we examine project selection through the lens of personality type
-/*
+
 SELECT employees.personality AS 'Personality Type', COUNT(employees.personality) AS 'Employees'
 FROM projects
 INNER JOIN employees ON employees.current_project = projects.project_id
 WHERE projects.project_name IS 'FistsOfFury'
 GROUP BY employees.personality
 ORDER BY COUNT(employees.first_name) DESC;
-*/
 
-/*
 SELECT personality, COUNT(personality)
 FROM employees
 WHERE current_project IS NOT NULL
 GROUP BY personality
 ORDER BY COUNT(personality) DESC; 
-*/
+
 
 --The following algorithm examines workplace compatibility based on personality type.
 SELECT employees.first_name AS 'First Name', employees.last_name AS 'Last Name', employees.personality AS 'Personality Type', projects.project_name AS 'Currently Assigned',
